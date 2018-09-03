@@ -70,10 +70,10 @@ extension IniciaisTableViewController{
             let iniciaisButton = UIBarButtonItem()
             iniciaisButton.title = "Voltar"
             self.navigationItem.backBarButtonItem = iniciaisButton
+            tableView.allowsSelection = true
             self.navigationController?.pushViewController(listaTableViewController, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        tableView.allowsSelection = true
     }
 }
 
