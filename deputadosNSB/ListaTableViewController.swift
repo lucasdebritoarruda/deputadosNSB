@@ -41,8 +41,11 @@ extension ListaTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "listaCellId")
-        cell.textLabel?.text = lista[indexPath.row].lowercased().capitalized
+//        let cell = UITableViewCell(style: .default, reuseIdentifier: "listaCellId")
+//        cell.textLabel?.text = lista[indexPath.row].lowercased().capitalized
+        let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
+        cell.nomeLabel.text = lista[indexPath.row].lowercased().capitalized
+        cell.cellSwitch.isOn = false
         return cell
     }
 }
@@ -60,9 +63,27 @@ class ListaCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let cellSwitch: UISwitch = {
+        let cellswitch = UISwitch()
+        cellswitch.translatesAutoresizingMaskIntoConstraints = false
+        return cellswitch
+    }()
+    
+    let nomeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    
     func setupViews(){
-        
+        addSubview(nomeLabel)
+        addSubview(cellSwitch)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1]-12-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":cellSwitch]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
     }
+    
 }
 
 
