@@ -12,6 +12,7 @@ class ListaTableViewController: UITableViewController {
     // MARK: - properties
     var lista: [String] = []
     var tituloDaTabela: String = " "
+    var idComNome: [String:String] = [:]
     
     // MARK: - view life cycle
     override func viewDidLoad() {
@@ -19,6 +20,8 @@ class ListaTableViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         navigationItem.title = tituloDaTabela
         tableView.register(ListaCell.self, forCellReuseIdentifier: "listaCellId")
+        let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
+        idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,12 +44,10 @@ extension ListaTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: .default, reuseIdentifier: "listaCellId")
-//        cell.textLabel?.text = lista[indexPath.row].lowercased().capitalized
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
         cell.nomeLabel.text = lista[indexPath.row].lowercased().capitalized
         cell.cellSwitch.isOn = false
-        cell.cellSwitch.tag = indexPath.row
+        cell.cellSwitch.tag = Int(idComNome[lista[indexPath.row]]!)!
         return cell
     }
     
@@ -90,9 +91,11 @@ class ListaCell: UITableViewCell {
     @objc func switchStateDidChange(_ sender:UISwitch){
         if (sender.isOn == true){
             print("Switch "+String(sender.tag)+" state is now ON")
+            
         }
         else{
             print("Switch "+String(sender.tag)+" state is now OFF")
+
         }
     }
     

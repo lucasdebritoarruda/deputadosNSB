@@ -79,8 +79,8 @@ extension IniciaisTableViewController{
             iniciaisButton.title = "Voltar"
             self.navigationItem.backBarButtonItem = iniciaisButton
             self.navigationController?.pushViewController(listaTableViewController, animated: true)
-           // print("lista recuperada")
-           // print(self.idComNome)
+           print("lista recuperada")
+           print(self.idComNome)
             tableView.allowsSelection = true
         }else{
             downloadList(link: links[indexPath.row]){
