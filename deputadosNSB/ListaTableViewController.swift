@@ -22,6 +22,7 @@ class ListaTableViewController: UITableViewController {
         tableView.register(ListaCell.self, forCellReuseIdentifier: "listaCellId")
         let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
         idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
+        tableView.allowsSelection = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,8 +47,17 @@ extension ListaTableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
         cell.nomeLabel.text = lista[indexPath.row].lowercased().capitalized
-        cell.cellSwitch.isOn = false
         cell.cellSwitch.tag = Int(idComNome[lista[indexPath.row]]!)!
+        if let y = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos){
+            let x = y as! [String]
+            if x.contains(String(cell.cellSwitch.tag)){
+               cell.cellSwitch.isOn = true
+            }else{
+               cell.cellSwitch.isOn = false
+            }
+        }else{
+            cell.cellSwitch.isOn = false
+        }
         return cell
     }
     
@@ -91,11 +101,22 @@ class ListaCell: UITableViewCell {
     @objc func switchStateDidChange(_ sender:UISwitch){
         if (sender.isOn == true){
             print("Switch "+String(sender.tag)+" state is now ON")
-            
+            let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos)
+            if var y = x as? [String]{
+                y.append(String(sender.tag))
+                UserDefaults.standard.set(y, forKey: UserDefaults.Keys.seguidos)
+            }else{
+                var x: [String] = []
+                x.append(String(sender.tag))
+                UserDefaults.standard.set(x, forKey: UserDefaults.Keys.seguidos)
+            }
         }
         else{
             print("Switch "+String(sender.tag)+" state is now OFF")
-
+            let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos)
+            var y = x as? [String]
+            y = y?.filter { $0 != String(sender.tag) }
+            UserDefaults.standard.set(y, forKey: UserDefaults.Keys.seguidos)
         }
     }
     
