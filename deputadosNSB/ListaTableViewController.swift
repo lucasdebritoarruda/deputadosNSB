@@ -46,13 +46,15 @@ extension ListaTableViewController{
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
         cell.nomeLabel.text = lista[indexPath.row].lowercased().capitalized
         cell.cellSwitch.isOn = false
+        cell.cellSwitch.tag = indexPath.row
         return cell
     }
+    
 }
-    // MARK: - Navigation
+    // MARK: - Auxiliar functions
     extension ListaTableViewController{}
 
-    // MARK: - Auxiliar functions
+    // MARK: - Auxiliar classes
 class ListaCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
@@ -79,9 +81,19 @@ class ListaCell: UITableViewCell {
     func setupViews(){
         addSubview(nomeLabel)
         addSubview(cellSwitch)
+        cellSwitch.addTarget(self, action: #selector(switchStateDidChange(_:)), for: .valueChanged)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1]-12-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":cellSwitch]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
+    }
+    
+    @objc func switchStateDidChange(_ sender:UISwitch){
+        if (sender.isOn == true){
+            print("Switch "+String(sender.tag)+" state is now ON")
+        }
+        else{
+            print("Switch "+String(sender.tag)+" state is now OFF")
+        }
     }
     
 }

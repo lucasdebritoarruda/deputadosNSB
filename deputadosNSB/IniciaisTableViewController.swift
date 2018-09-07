@@ -79,8 +79,8 @@ extension IniciaisTableViewController{
             iniciaisButton.title = "Voltar"
             self.navigationItem.backBarButtonItem = iniciaisButton
             self.navigationController?.pushViewController(listaTableViewController, animated: true)
-            print("lista recuperada")
-            print(self.idComNome)
+           // print("lista recuperada")
+           // print(self.idComNome)
             tableView.allowsSelection = true
         }else{
             downloadList(link: links[indexPath.row]){
@@ -94,7 +94,7 @@ extension IniciaisTableViewController{
                 dict.forEach({ (k,v) in
                     self.idComNome[k] = v
                 })
-                print(self.idComNome)
+               // print(self.idComNome)
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject: self.idComNome)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.dicionarioIdNome)
                 
@@ -107,7 +107,7 @@ extension IniciaisTableViewController{
                 self.navigationItem.backBarButtonItem = iniciaisButton
                 tableView.allowsSelection = true
                 self.navigationController?.pushViewController(listaTableViewController, animated: true)
-                print("lista baixada e salva")
+               // print("lista baixada e salva")
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
