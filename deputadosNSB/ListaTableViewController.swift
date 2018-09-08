@@ -10,9 +10,9 @@ import UIKit
 
 class ListaTableViewController: UITableViewController {
     // MARK: - properties
-    var lista: [String] = []
+    var listaDeNomes: [String] = []
+    var listaDeIds: [String] = []
     var tituloDaTabela: String = " "
-    var idComNome: [String:String] = [:]
     
     // MARK: - view life cycle
     override func viewDidLoad() {
@@ -20,9 +20,6 @@ class ListaTableViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         navigationItem.title = tituloDaTabela
         tableView.register(ListaCell.self, forCellReuseIdentifier: "listaCellId")
-        let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
-        idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
-        print(idComNome)
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,14 +38,15 @@ extension ListaTableViewController{
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return lista.count
+        return listaDeNomes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
-        cell.nomeLabel.text = lista[indexPath.row].lowercased().capitalized
+        cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
         cell.cellSwitch.isOn = false
-        cell.cellSwitch.tag = Int(idComNome[lista[indexPath.row]]!)!
+        cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
+        cell.cellSwitch.name = listaDeNomes[indexPath.row]
         return cell
     }
     
@@ -57,6 +55,11 @@ extension ListaTableViewController{
     extension ListaTableViewController{}
 
     // MARK: - Auxiliar classes
+
+class customSwitch:UISwitch{
+    var name: String = ""
+}
+
 class ListaCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
@@ -67,8 +70,8 @@ class ListaCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let cellSwitch: UISwitch = {
-        let cellswitch = UISwitch()
+    let cellSwitch: customSwitch = {
+        let cellswitch = customSwitch()
         cellswitch.translatesAutoresizingMaskIntoConstraints = false
         return cellswitch
     }()
@@ -89,13 +92,12 @@ class ListaCell: UITableViewCell {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
     }
     
-    @objc func switchStateDidChange(_ sender:UISwitch){
+    @objc func switchStateDidChange(_ sender:customSwitch){
         if (sender.isOn == true){
-            print("Switch "+String(sender.tag)+" state is now ON")
+            print("Switch "+String(sender.tag)+" state is now ON nome do deputado: "+sender.name)
         }
         else{
-            print("Switch "+String(sender.tag)+" state is now OFF")
-
+            print("Switch "+String(sender.tag)+" state is now OFF nome do deputado: "+sender.name)
         }
     }
     

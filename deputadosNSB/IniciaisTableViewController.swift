@@ -61,54 +61,18 @@ extension IniciaisTableViewController{
 // MARK: - Navigation
 extension IniciaisTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let x = tableView.cellForRow(at: indexPath)?.textLabel?.text
-        let y = UserDefaults.standard.object(forKey: x!)
-        
         tableView.allowsSelection = false
-        
-        if let lista = y as? [String]{
-            
-            let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
-            self.idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
-            
+        downloadList(link: links[indexPath.row]){
+            nomes,ids in
             let listaTableViewController = ListaTableViewController()
-            listaTableViewController.lista = lista
+            listaTableViewController.listaDeNomes = nomes
+            listaTableViewController.listaDeIds = ids 
             listaTableViewController.tituloDaTabela = self.itens[indexPath.row]
             let iniciaisButton = UIBarButtonItem()
             iniciaisButton.title = "Voltar"
             self.navigationItem.backBarButtonItem = iniciaisButton
-            self.navigationController?.pushViewController(listaTableViewController, animated: true)
-           print("lista recuperada")
-           print(self.idComNome)
             tableView.allowsSelection = true
-        }else{
-            downloadList(link: links[indexPath.row]){
-                nomes,ids in
-                
-                var dict = [String:String]()
-                for(index,element) in nomes.enumerated(){
-                    dict[element] = ids[index]
-                }
-                
-                dict.forEach({ (k,v) in
-                    self.idComNome[k] = v
-                })
-               // print(self.idComNome)
-                let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject: self.idComNome)
-                UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.dicionarioIdNome)
-                
-                saveToUserDefaults(lista: nomes, row: indexPath.row)
-                let listaTableViewController = ListaTableViewController()
-                listaTableViewController.lista = nomes
-                listaTableViewController.tituloDaTabela = self.itens[indexPath.row]
-                let iniciaisButton = UIBarButtonItem()
-                iniciaisButton.title = "Voltar"
-                self.navigationItem.backBarButtonItem = iniciaisButton
-                tableView.allowsSelection = true
-                self.navigationController?.pushViewController(listaTableViewController, animated: true)
-               // print("lista baixada e salva")
-            }
+            self.navigationController?.pushViewController(listaTableViewController, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
