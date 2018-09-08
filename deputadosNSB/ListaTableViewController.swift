@@ -22,6 +22,7 @@ class ListaTableViewController: UITableViewController {
         tableView.register(ListaCell.self, forCellReuseIdentifier: "listaCellId")
         let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
         idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
+        print(idComNome)
     }
 
     override func didReceiveMemoryWarning() {
@@ -91,7 +92,6 @@ class ListaCell: UITableViewCell {
     @objc func switchStateDidChange(_ sender:UISwitch){
         if (sender.isOn == true){
             print("Switch "+String(sender.tag)+" state is now ON")
-            
         }
         else{
             print("Switch "+String(sender.tag)+" state is now OFF")
