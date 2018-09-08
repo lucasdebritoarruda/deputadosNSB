@@ -13,6 +13,7 @@ class MainTableViewController: UITableViewController {
     var nomes = ["Lucas","Tais","Luma","Claudia"]
     var idComNome: [String:String] = [:]
     var lista: [String] = []
+    var tabela: [String] = []
     
     // MARK: - App life cycle
     override func viewDidLoad() {
@@ -25,6 +26,8 @@ class MainTableViewController: UITableViewController {
         idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
         lista = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as! [String]
         self.tableView.tableFooterView = UIView()
+        tabela = lista.map {idComNome.keysForValue(value: $0)[0]}.sorted { $0 < $1 }
+        print(tabela)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,6 +39,7 @@ class MainTableViewController: UITableViewController {
         lista = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as! [String]
         let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
         idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
+        tabela = lista.map {idComNome.keysForValue(value: $0)[0]}.sorted { $0 < $1 }
         tableView.reloadData()
     }
 
@@ -77,7 +81,7 @@ extension MainTableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "mainCellId")
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        cell.textLabel?.text = idComNome.keysForValue(value: lista[indexPath.row])[0].lowercased().capitalized
+        cell.textLabel?.text = tabela[indexPath.row].lowercased().capitalized
         return cell
     }
 }
