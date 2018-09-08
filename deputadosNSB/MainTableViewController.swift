@@ -11,6 +11,8 @@ import UIKit
 class MainTableViewController: UITableViewController {
     
     var nomes = ["Lucas","Tais","Luma","Claudia"]
+    var idComNome: [String:String] = [:]
+    var lista: [String] = []
     
     // MARK: - App life cycle
     override func viewDidLoad() {
@@ -19,12 +21,22 @@ class MainTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"plus"), style: .plain, target: self, action: #selector(toList))
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "info"), style: .plain, target: self, action: #selector(toInfo))
         tableView.register(MainCell.self, forCellReuseIdentifier: "mainCellId")
+        let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
+        idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
+        lista = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as! [String]
         self.tableView.tableFooterView = UIView()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        lista = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as! [String]
+        let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.dicionarioIdNome) as! Data
+        idComNome = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, String>
+        tableView.reloadData()
     }
 
 }
@@ -58,13 +70,14 @@ extension MainTableViewController{
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return nomes.count
+        return lista.count
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "mainCellId")
-        cell.textLabel?.text = nomes[indexPath.row]
+        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        cell.textLabel?.text = idComNome.keysForValue(value: lista[indexPath.row])[0].lowercased().capitalized
         return cell
     }
 }
@@ -85,47 +98,11 @@ class MainCell: UITableViewCell {
     }
 }
 
-/*
- // Override to support conditional editing of the table view.
- override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
- // Return false if you do not want the specified item to be editable.
- return true
- }
- */
+extension Dictionary where Value: Equatable {
+    func keysForValue(value: Value) -> [Key] {
+        return flatMap { (key: Key, val: Value) -> Key? in
+            value == val ? key : nil
+        }
+    }
+}
 
-/*
- // Override to support editing the table view.
- override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
- if editingStyle == .delete {
- // Delete the row from the data source
- tableView.deleteRows(at: [indexPath], with: .fade)
- } else if editingStyle == .insert {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
- 
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
- // Return false if you do not want the item to be re-orderable.
- return true
- }
- */
-
-/*
- // MARK: - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
- // Get the new view controller using segue.destinationViewController.
- // Pass the selected object to the new view controller.
- }
- */
