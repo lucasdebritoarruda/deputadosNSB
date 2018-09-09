@@ -42,11 +42,26 @@ extension ListaTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
+//        cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
+//        cell.cellSwitch.isOn = false
+//        cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
+//        cell.cellSwitch.name = listaDeNomes[indexPath.row]
+//        return cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
         cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
-        cell.cellSwitch.isOn = false
         cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
         cell.cellSwitch.name = listaDeNomes[indexPath.row]
+        if let y = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
+            let x = NSKeyedUnarchiver.unarchiveObject(with: y) as! Dictionary<String, Int>
+            if x.keys.contains(listaDeNomes[indexPath.row]){
+                cell.cellSwitch.isOn = true
+            }else{
+                cell.cellSwitch.isOn = false
+            }
+        }else{
+            cell.cellSwitch.isOn = false
+        }
         return cell
     }
     
@@ -95,66 +110,31 @@ class ListaCell: UITableViewCell {
     @objc func switchStateDidChange(_ sender:customSwitch){
         if (sender.isOn == true){
             print("Switch "+String(sender.tag)+" state is now ON nome do deputado: "+sender.name)
+            if let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
+                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, Int>
+                seguidos[sender.name] = sender.tag
+                let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
+                UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                print("Dicionário resgatado e atualizado " + String(describing: seguidos))
+            }else{
+                var seguidos: [String:Int] = [:]
+                seguidos[sender.name] = sender.tag
+                let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
+                UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                print("Dicionário criado e salvo " + String(describing: seguidos))
+            }
         }
         else{
             print("Switch "+String(sender.tag)+" state is now OFF nome do deputado: "+sender.name)
+            if let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
+                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, Int>
+                seguidos.removeValue(forKey: sender.name)
+                let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
+                UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                print("Dicionário resgatado e atualizado item removido:" + sender.name)
+            }
         }
     }
     
 }
 
-
-
-/*
- override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
- let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
- 
- // Configure the cell...
- 
- return cell
- }
- */
-
-/*
- // Override to support conditional editing of the table view.
- override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
- // Return false if you do not want the specified item to be editable.
- return true
- }
- */
-
-/*
- // Override to support editing the table view.
- override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
- if editingStyle == .delete {
- // Delete the row from the data source
- tableView.deleteRows(at: [indexPath], with: .fade)
- } else if editingStyle == .insert {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
- 
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
- // Return false if you do not want the item to be re-orderable.
- return true
- }
- */
-
-/*
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
- // Get the new view controller using segue.destinationViewController.
- // Pass the selected object to the new view controller.
- }
- */
