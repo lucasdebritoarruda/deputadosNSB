@@ -11,6 +11,8 @@ import UIKit
 class MainTableViewController: UITableViewController {
     
     var nomes = ["Lucas","Tais","Luma","Claudia"]
+    //var idComNome: [String:Int] = [:]
+    var listaDosNomesDosSeguidos:[String] = [ ]
     
     // MARK: - App life cycle
     override func viewDidLoad() {
@@ -20,6 +22,16 @@ class MainTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "info"), style: .plain, target: self, action: #selector(toInfo))
         tableView.register(MainCell.self, forCellReuseIdentifier: "mainCellId")
         self.tableView.tableFooterView = UIView()
+        if let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaNomesDosSeguidos) as? [String] {
+            listaDosNomesDosSeguidos = x
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaNomesDosSeguidos) as? [String] {
+            listaDosNomesDosSeguidos = x
+        }
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -58,13 +70,13 @@ extension MainTableViewController{
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return nomes.count
+        return listaDosNomesDosSeguidos.count
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "mainCellId")
-        cell.textLabel?.text = nomes[indexPath.row]
+        cell.textLabel?.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
         return cell
     }
 }

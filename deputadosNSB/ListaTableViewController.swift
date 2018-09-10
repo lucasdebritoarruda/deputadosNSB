@@ -20,6 +20,7 @@ class ListaTableViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         navigationItem.title = tituloDaTabela
         tableView.register(ListaCell.self, forCellReuseIdentifier: "listaCellId")
+        tableView.allowsSelection = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,12 +43,6 @@ extension ListaTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
-//        cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
-//        cell.cellSwitch.isOn = false
-//        cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
-//        cell.cellSwitch.name = listaDeNomes[indexPath.row]
-//        return cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "listaCellId") as! ListaCell
         cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
         cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
@@ -110,27 +105,59 @@ class ListaCell: UITableViewCell {
     @objc func switchStateDidChange(_ sender:customSwitch){
         if (sender.isOn == true){
             print("Switch "+String(sender.tag)+" state is now ON nome do deputado: "+sender.name)
-            if let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
-                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, Int>
+            if let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
+                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: x) as! Dictionary<String, Int>
                 seguidos[sender.name] = sender.tag
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                
+                if var y = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaNomesDosSeguidos) as? [String]{
+                    y.append(sender.name)
+                    y = y.sorted { $0 < $1 }
+                    UserDefaults.standard.set(y, forKey: UserDefaults.Keys.listaNomesDosSeguidos)
+                }
+                
+                if var z = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaIdsDosSeguidos) as? [Int]{
+                    z.append(sender.tag)
+                    UserDefaults.standard.set(z, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
+                }
+                
                 print("Dicionário resgatado e atualizado " + String(describing: seguidos))
             }else{
                 var seguidos: [String:Int] = [:]
                 seguidos[sender.name] = sender.tag
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                
+                var listaDeNomesDosSeguidos:[String] = [ ]
+                var listaDeIdsDosSeguidos:[Int] = [ ]
+                
+                listaDeNomesDosSeguidos.append(sender.name)
+                UserDefaults.standard.set(listaDeNomesDosSeguidos, forKey: UserDefaults.Keys.listaNomesDosSeguidos)
+                listaDeIdsDosSeguidos.append(sender.tag)
+                UserDefaults.standard.set(listaDeIdsDosSeguidos, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
+                
                 print("Dicionário criado e salvo " + String(describing: seguidos))
             }
         }
         else{
             print("Switch "+String(sender.tag)+" state is now OFF nome do deputado: "+sender.name)
-            if let z = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
-                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: z) as! Dictionary<String, Int>
+            if let x = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
+                var seguidos = NSKeyedUnarchiver.unarchiveObject(with: x) as! Dictionary<String, Int>
                 seguidos.removeValue(forKey: sender.name)
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
+                
+                if var y = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaNomesDosSeguidos) as? [String]{
+                    y = y.filter { $0 != sender.name } .sorted { $0 < $1 }
+                    UserDefaults.standard.set(y, forKey: UserDefaults.Keys.listaNomesDosSeguidos)
+                }
+                
+                if var z = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaIdsDosSeguidos) as? [Int]{
+                    z = z.filter { $0 != sender.tag}
+                    UserDefaults.standard.set(z, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
+                }
+                
                 print("Dicionário resgatado e atualizado item removido:" + sender.name)
             }
         }

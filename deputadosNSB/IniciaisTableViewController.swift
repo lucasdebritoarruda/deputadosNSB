@@ -110,38 +110,13 @@ func downloadList(link:String,completion: @escaping ([String],[String])->Void){
             //print(nomes)
     }
 }
-func saveToUserDefaults(lista:[String], row:Int){
-    if row == 0{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.abc)
-    }
-    if row == 1{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.cdefgh)
-    }
-    if row == 2{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.hijkl)
-    }
-    if row == 3{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.lmnop)
-    }
-    if row == 4{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.rstuvw)
-    }
-    if row == 5{
-        UserDefaults.standard.set(lista, forKey: UserDefaults.Keys.wxyz)
-    }
-}
 
 // MARK: - UserDefaults Keys
 extension UserDefaults{
     enum Keys{
-        static let abc = "A - B - C"
-        static let cdefgh = "C - D - E - F - G - H"
-        static let hijkl = "H - I - J - K - L"
-        static let lmnop = "L - M - N - O - P"
-        static let rstuvw = "R - S - T - U - V - W"
-        static let wxyz = "W - X - Y - Z"
-        static let dicionarioIdNome = "dicionarioIdNome"
         static let seguidos = "seguidos"
+        static let listaNomesDosSeguidos = "listaNomesDosSeguidos"
+        static let listaIdsDosSeguidos = "listaIdsDosSeguidos"
     }
 }
 
