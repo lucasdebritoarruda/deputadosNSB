@@ -75,8 +75,14 @@ extension MainTableViewController{
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "mainCellId")
-        cell.textLabel?.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
+//        let cell = UITableViewCell(style: .default, reuseIdentifier: "mainCellId")
+//        cell.textLabel?.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
+//        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "mainCellId") as! MainCell
+        cell.deputadoFoto.image = UIImage(named:"178889")
+        cell.nomeLabel.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
+        cell.nomeLabel.font = UIFont.boldSystemFont(ofSize: 16)
         return cell
     }
 }
@@ -92,8 +98,28 @@ class MainCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let nomeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    
+    var deputadoFoto: UIImageView = {
+        var image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.contentMode = .scaleAspectFit
+        image.clipsToBounds = true
+        return image
+    }()
+    
     func setupViews(){
+        addSubview(nomeLabel)
+        addSubview(deputadoFoto)
         
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(45)]-8-[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0(45)]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
     }
 }
 
