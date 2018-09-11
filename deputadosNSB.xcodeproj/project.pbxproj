@@ -35,7 +35,6 @@
 		A022B48621387F70003F480B /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
 		A048DD132139A5000007F91F /* InfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		A048DD152139CDD50007F91F /* InfoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoDetailViewController.swift; sourceTree = "<group>"; };
-		A04D78BE2147373500AEE18D /* 178889.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 178889.jpg; sourceTree = "<group>"; };
 		A0825BED213C8244005D30DC /* ListaTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,7 +79,6 @@
 				A048DD132139A5000007F91F /* InfoTableViewController.swift */,
 				A022B482213876F2003F480B /* MainNavigationController.swift */,
 				A022B4772138722A003F480B /* Assets.xcassets */,
-				A04D78BE2147373500AEE18D /* 178889.jpg */,
 				A022B4792138722A003F480B /* LaunchScreen.storyboard */,
 				A022B47C2138722A003F480B /* Info.plist */,
 				A022B4742138722A003F480B /* deputadosNSB.xcdatamodeld */,

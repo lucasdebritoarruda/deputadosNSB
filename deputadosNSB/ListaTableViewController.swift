@@ -110,34 +110,41 @@ class ListaCell: UITableViewCell {
                 seguidos[sender.name] = sender.tag
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
-                
                 if var y = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaNomesDosSeguidos) as? [String]{
                     y.append(sender.name)
                     y = y.sorted { $0 < $1 }
                     UserDefaults.standard.set(y, forKey: UserDefaults.Keys.listaNomesDosSeguidos)
                 }
-                
                 if var z = UserDefaults.standard.object(forKey: UserDefaults.Keys.listaIdsDosSeguidos) as? [Int]{
                     z.append(sender.tag)
                     UserDefaults.standard.set(z, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
                 }
-                
                 print("Dicionário resgatado e atualizado " + String(describing: seguidos))
             }else{
                 var seguidos: [String:Int] = [:]
                 seguidos[sender.name] = sender.tag
                 let encondedDict: Data = NSKeyedArchiver.archivedData(withRootObject:seguidos)
                 UserDefaults.standard.set(encondedDict, forKey: UserDefaults.Keys.seguidos)
-                
                 var listaDeNomesDosSeguidos:[String] = [ ]
                 var listaDeIdsDosSeguidos:[Int] = [ ]
-                
                 listaDeNomesDosSeguidos.append(sender.name)
                 UserDefaults.standard.set(listaDeNomesDosSeguidos, forKey: UserDefaults.Keys.listaNomesDosSeguidos)
                 listaDeIdsDosSeguidos.append(sender.tag)
                 UserDefaults.standard.set(listaDeIdsDosSeguidos, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
-                
                 print("Dicionário criado e salvo " + String(describing: seguidos))
+            }
+            let url = URL(string:"http://www.camara.leg.br/internet/deputado/bandep/" + String(sender.tag) + ".jpg")!
+            let data = try? Data(contentsOf: url)
+            let foto = UIImage(data:data!)
+            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+            if documentsPath.count > 0{
+                let documentsDirectory = documentsPath[0]
+                let savePath = documentsDirectory + String(sender.tag) + ".jpg"
+                do{
+                    try UIImageJPEGRepresentation(foto!, 1)?.write(to: URL(fileURLWithPath: savePath))
+                }catch{
+                    // handle error
+                }
             }
         }
         else{
