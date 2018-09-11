@@ -124,8 +124,11 @@ class MainCell: UITableViewCell {
     var deputadoFoto: UIImageView = {
         var image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
-        image.clipsToBounds = true
+        image.contentMode = .scaleAspectFill
+        image.layer.masksToBounds = true
+        image.layer.cornerRadius = 30
+        image.layer.borderWidth = 2
+        image.layer.borderColor = UIColor(red: 33/255, green: 131/255, blue: 218/255, alpha: 1).cgColor
         return image
     }()
     
@@ -133,9 +136,9 @@ class MainCell: UITableViewCell {
         addSubview(nomeLabel)
         addSubview(deputadoFoto)
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(45)]-8-[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(60)]-8-[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0(45)]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0(60)]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
     }
 }
 
