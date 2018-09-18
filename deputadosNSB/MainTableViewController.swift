@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LBTAComponents
 
 class MainTableViewController: UITableViewController {
     
@@ -41,11 +42,6 @@ class MainTableViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }
 
 // MARK: - Auxiliar Functions
@@ -71,12 +67,10 @@ extension MainTableViewController{
 extension MainTableViewController{
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return listaDosNomesDosSeguidos.count
     }
     
@@ -85,20 +79,9 @@ extension MainTableViewController{
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "mainCellId") as! MainCell
         
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        if documentsPath.count > 0{
-
-            let documentsDirectory = documentsPath[0]
-
-            let x = String(describing: idComNome[listaDosNomesDosSeguidos[indexPath.row]]!)
-
-            let restorePath = documentsDirectory + x + ".jpg"
-            
-            print(restorePath)
-
-            cell.deputadoFoto.image = UIImage(contentsOfFile:restorePath)
-            
-        }
+        let photoUrl = "http://www.camara.leg.br/internet/deputado/bandep/" + String(describing: idComNome[listaDosNomesDosSeguidos[indexPath.row]]!) + ".jpg"
+        
+        cell.deputadoFoto.loadImage(urlString: photoUrl)
         
         cell.nomeLabel.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
         cell.nomeLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -128,8 +111,8 @@ class MainCell: UITableViewCell {
         return label
     }()
     
-    var deputadoFoto: UIImageView = {
-        var image = UIImageView()
+    var deputadoFoto: CachedImageView = {
+        var image = CachedImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         image.layer.masksToBounds = true
@@ -142,7 +125,7 @@ class MainCell: UITableViewCell {
     func setupViews(){
         addSubview(nomeLabel)
         addSubview(deputadoFoto)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(60)]-8-[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(60)]-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0(60)]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
     }

@@ -119,7 +119,7 @@ class ListaCell: UITableViewCell {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-12-[v2(60)]-8-[v0]-8-[v1]-12-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":cellSwitch,"v2":deputadoFoto]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-25-[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
     }
     
     @objc func switchStateDidChange(_ sender:customSwitch){
@@ -152,19 +152,6 @@ class ListaCell: UITableViewCell {
                 listaDeIdsDosSeguidos.append(sender.tag)
                 UserDefaults.standard.set(listaDeIdsDosSeguidos, forKey: UserDefaults.Keys.listaIdsDosSeguidos)
                 print("Dicionário criado e salvo " + String(describing: seguidos))
-            }
-            let url = URL(string:"http://www.camara.leg.br/internet/deputado/bandep/" + String(sender.tag) + ".jpg")!
-            let data = try? Data(contentsOf: url)
-            let foto = UIImage(data:data!)
-            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-            if documentsPath.count > 0{
-                let documentsDirectory = documentsPath[0]
-                let savePath = documentsDirectory + String(sender.tag) + ".jpg"
-                do{
-                    try UIImageJPEGRepresentation(foto!, 1)?.write(to: URL(fileURLWithPath: savePath))
-                }catch{
-                    // handle error
-                }
             }
         }
         else{
