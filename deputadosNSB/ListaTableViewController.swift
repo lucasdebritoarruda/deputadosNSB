@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import LBTAComponents
 
 class ListaTableViewController: UITableViewController {
     // MARK: - properties
     var listaDeNomes: [String] = []
     var listaDeIds: [String] = []
+    var listaDeUrls: [String] = []
     var tituloDaTabela: String = " "
     
     // MARK: - view life cycle
@@ -47,6 +49,7 @@ extension ListaTableViewController{
         cell.nomeLabel.text = listaDeNomes[indexPath.row].lowercased().capitalized
         cell.cellSwitch.tag = Int(listaDeIds[indexPath.row])!
         cell.cellSwitch.name = listaDeNomes[indexPath.row]
+        cell.deputadoFoto.loadImage(urlString: listaDeUrls[indexPath.row])
         if let y = UserDefaults.standard.object(forKey: UserDefaults.Keys.seguidos) as? Data{
             let x = NSKeyedUnarchiver.unarchiveObject(with: y) as! Dictionary<String, Int>
             if x.keys.contains(listaDeNomes[indexPath.row]){
@@ -58,6 +61,10 @@ extension ListaTableViewController{
             cell.cellSwitch.isOn = false
         }
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
 }
@@ -93,13 +100,26 @@ class ListaCell: UITableViewCell {
         return label
     }()
     
+    var deputadoFoto: CachedImageView = {
+        var image = CachedImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.contentMode = .scaleAspectFill
+        image.layer.masksToBounds = true
+        image.layer.cornerRadius = 30
+        image.layer.borderWidth = 2
+        image.layer.borderColor = UIColor(red: 33/255, green: 131/255, blue: 218/255, alpha: 1).cgColor
+        return image
+    }()
+    
     func setupViews(){
+        addSubview(deputadoFoto)
         addSubview(nomeLabel)
         addSubview(cellSwitch)
         cellSwitch.addTarget(self, action: #selector(switchStateDidChange(_:)), for: .valueChanged)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1]-12-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":cellSwitch]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-12-[v2(60)]-8-[v0]-8-[v1]-12-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":cellSwitch,"v2":deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": cellSwitch]))
     }
     
     @objc func switchStateDidChange(_ sender:customSwitch){

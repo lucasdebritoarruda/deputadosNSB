@@ -6,5 +6,6 @@ target 'deputadosNSB' do
 
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'LBTAComponents'
 
 end

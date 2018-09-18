@@ -63,10 +63,11 @@ extension IniciaisTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.allowsSelection = false
         downloadList(link: links[indexPath.row]){
-            nomes,ids in
+            nomes,ids,urls in
             let listaTableViewController = ListaTableViewController()
             listaTableViewController.listaDeNomes = nomes
-            listaTableViewController.listaDeIds = ids 
+            listaTableViewController.listaDeIds = ids
+            listaTableViewController.listaDeUrls = urls
             listaTableViewController.tituloDaTabela = self.itens[indexPath.row]
             let iniciaisButton = UIBarButtonItem()
             iniciaisButton.title = "Voltar"
@@ -95,7 +96,7 @@ class InicialCell: UITableViewCell {
 }
 
 // MARK: - Auxiliar Functions
-func downloadList(link:String,completion: @escaping ([String],[String])->Void){
+func downloadList(link:String,completion: @escaping ([String],[String],[String])->Void){
     let url = URL(string: link)
     Alamofire.request(url!)
         .responseJSON { (response) in
@@ -106,7 +107,8 @@ func downloadList(link:String,completion: @escaping ([String],[String])->Void){
             }
             let nomes = JSON(value)["dados"].arrayValue.map({$0["nome"].stringValue})
             let ids = JSON(value)["dados"].arrayValue.map({$0["id"].stringValue})
-            completion(nomes,ids)
+            let urls = JSON(value)["dados"].arrayValue.map({$0["urlFoto"].stringValue})
+            completion(nomes,ids,urls)
             //print(nomes)
     }
 }

@@ -93,13 +93,20 @@ extension MainTableViewController{
             let x = String(describing: idComNome[listaDosNomesDosSeguidos[indexPath.row]]!)
 
             let restorePath = documentsDirectory + x + ".jpg"
+            
+            print(restorePath)
 
             cell.deputadoFoto.image = UIImage(contentsOfFile:restorePath)
             
         }
+        
         cell.nomeLabel.text = listaDosNomesDosSeguidos[indexPath.row].lowercased().capitalized
         cell.nomeLabel.font = UIFont.boldSystemFont(ofSize: 16)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 }
 
@@ -135,10 +142,9 @@ class MainCell: UITableViewCell {
     func setupViews(){
         addSubview(nomeLabel)
         addSubview(deputadoFoto)
-        
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v1(60)]-8-[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel,"v1":deputadoFoto]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0(60)]-16-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": nomeLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0(60)]-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": deputadoFoto]))
     }
 }
 
